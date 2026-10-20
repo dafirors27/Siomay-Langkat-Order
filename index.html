@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Siomay Langkat Order</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- html2pdf for PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #8B5CF6; /* Purple 500 */
+      --primary-hover: #7C3AED; /* Purple 600 */
+      --bg-color: #F8F9FA;
+    }
+    body { 
+      background-color: var(--bg-color); 
+      font-family: 'Inter', 'Segoe UI', sans-serif; 
+      -webkit-tap-highlight-color: transparent;
+    }
+    .hide { display: none !important; }
+    
+    .app-container { 
+      max-width: 480px; 
+      margin: 0 auto; 
+      background: white; 
+      min-height: 100vh; 
+      position: relative; 
+      box-shadow: 0 0 20px rgba(0,0,0,0.05); 
+    }
+    .admin-container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      background: #F3F4F6; 
+      min-height: 100vh; 
+    }
+    
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    #custom-alert {
+      transition: opacity 0.3s, transform 0.3s;
+    }
+  </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+  <!-- ============================================== -->
+  <!-- CUSTOMER VIEW (MOBILE APP SIMULATION)          -->
+  <!-- ============================================== -->
+  <div id="customer-view" class="app-container">
+    
+    <!-- Top Bar with Social Media Quick Links -->
+    <div class="flex justify-between items-center p-4 pt-6 bg-white sticky top-0 z-20 border-b border-gray-100">
+      <div>
+        <p class="text-[11px] text-gray-400 font-medium">Selamat Datang 👋</p>
+        <h1 class="text-lg font-black text-gray-900 tracking-tight">Siomay Langkat</h1>
+      </div>
+      <div class="flex items-center space-x-1.5" id="customer-socmed-container">
+        <!-- Injected via JS -->
+        <a id="socmed-wa" href="https://wa.me/6281234567890" target="_blank" title="WhatsApp" class="w-8 h-8 rounded-full bg-green-50 text-green-600 flex justify-center items-center hover:bg-green-100 transition shadow-sm text-xs">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+        <a id="socmed-ig" href="https://instagram.com" target="_blank" title="Instagram" class="w-8 h-8 rounded-full bg-pink-50 text-pink-600 flex justify-center items-center hover:bg-pink-100 transition shadow-sm text-xs">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a id="socmed-tk" href="https://tiktok.com" target="_blank" title="TikTok" class="w-8 h-8 rounded-full bg-gray-100 text-gray-800 flex justify-center items-center hover:bg-gray-200 transition shadow-sm text-xs">
+          <i class="fab fa-tiktok"></i>
+        </a>
+        <button onclick="showAdminLogin()" class="w-8 h-8 rounded-full bg-purple-50 text-purple-600 flex justify-center items-center hover:bg-purple-100 transition shadow-sm text-xs ml-0.5" title="Admin Login">
+          <i class="fas fa-user-shield"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Recommended Product Banner with Blurred Background & Real Photo -->
+    <div class="px-4 mb-4 mt-3">
+      <div class="rounded-3xl p-5 text-white flex justify-between items-center shadow-lg shadow-purple-200/50 relative overflow-hidden bg-purple-900">
+        <!-- Blurred background image matching user reference -->
+        <div class="absolute inset-0 bg-cover bg-center filter blur-sm opacity-40 scale-110" style="background-image: url('https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=600&q=80');"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-900/90 to-purple-600/70"></div>
+        
+        <div class="relative z-10 max-w-[58%]">
+          <span class="bg-white/20 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider mb-1.5 inline-block">⭐ Menu Recommended</span>
+          <h2 class="text-base font-black mb-1 leading-tight">Siomay Langkat Spesial</h2>
+          <p class="text-[11px] text-purple-100 mb-2.5 line-clamp-2">Ikan tenggiri asli dengan telur, kol, pare & bumbu kacang gurih.</p>
+          <button onclick="scrollToMenu()" class="bg-white text-purple-700 px-3 py-1 rounded-full text-[11px] font-black shadow-md hover:bg-purple-50 transition">Pesan Sekarang</button>
+        </div>
+        <div class="relative z-10 w-24 h-24 rounded-2xl overflow-hidden shadow-md border-2 border-white/30 flex-shrink-0">
+          <img src="https://awsimages.detik.net.id/community/media/visual/2019/10/03/a868c448-68ed-4932-aa3d-0719a2441840.jpeg?w=700&q=90" alt="Siomay" class="w-full h-full object-cover">
+        </div>
+      </div>
+    </div>
+
+    <!-- Categories - Compact Landscape Pills (Horizontal layout icon + text) -->
+    <div class="px-4 mb-4" id="menu-anchor">
+      <h2 class="text-xs font-bold mb-2 text-gray-700">Kategori Pilihan</h2>
+      <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-1">
+        <div onclick="filterCategory('All')" class="flex items-center space-x-2 bg-purple-600 text-white px-3 py-2 rounded-xl cursor-pointer shadow-sm flex-shrink-0 transition cat-pill active-cat" data-cat="All">
+          <i class="fas fa-th-large text-xs"></i>
+          <span class="text-xs font-bold">Semua</span>
+        </div>
+        <div onclick="filterCategory('Makanan')" class="flex items-center space-x-2 bg-white border border-gray-100 text-gray-700 px-3 py-2 rounded-xl cursor-pointer shadow-sm flex-shrink-0 transition cat-pill" data-cat="Makanan">
+          <i class="fas fa-bowl-food text-purple-500 text-xs"></i>
+          <span class="text-xs font-semibold">Makanan</span>
+        </div>
+        <div onclick="filterCategory('Minuman')" class="flex items-center space-x-2 bg-white border border-gray-100 text-gray-700 px-3 py-2 rounded-xl cursor-pointer shadow-sm flex-shrink-0 transition cat-pill" data-cat="Minuman">
+          <i class="fas fa-mug-hot text-orange-400 text-xs"></i>
+          <span class="text-xs font-semibold">Minuman</span>
+        </div>
+        <div onclick="filterCategory('Paket')" class="flex items-center space-x-2 bg-white border border-gray-100 text-gray-700 px-3 py-2 rounded-xl cursor-pointer shadow-sm flex-shrink-0 transition cat-pill" data-cat="Paket">
+          <i class="fas fa-box text-green-500 text-xs"></i>
+          <span class="text-xs font-semibold">Paket</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Section -->
+    <div class="px-4 mb-8 bg-gray-50 pt-4 rounded-t-3xl min-h-[280px]">
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="text-base font-bold text-gray-900">Daftar Menu</h2>
+      </div>
+      
+      <div id="menu-loading" class="flex flex-col items-center justify-center py-10 text-purple-500">
+        <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+        <p class="font-medium text-xs">Memuat Menu Lezat...</p>
+      </div>
+
+      <div id="menu-container" class="grid grid-cols-2 gap-3">
+        <!-- Menu injected via JS -->
+      </div>
+    </div>
+
+    <!-- Kritik & Saran Section (Customer) -->
+    <div class="px-4 pb-28 pt-2 bg-white border-t border-gray-100">
+      <div class="bg-purple-50/60 p-4 rounded-3xl border border-purple-100">
+        <div class="flex items-center space-x-2 mb-2.5">
+          <div class="w-7 h-7 rounded-full bg-purple-200 text-purple-700 flex items-center justify-center text-xs font-bold"><i class="fas fa-comment-dots"></i></div>
+          <h3 class="font-bold text-gray-900 text-xs">Kritik & Saran (Opsional)</h3>
+        </div>
+        <p class="text-[11px] text-gray-500 mb-2.5">Bantu kami melayani lebih baik dengan masukan Anda.</p>
+        <div class="space-y-2.5">
+          <input type="text" id="ks-nama" placeholder="Nama Anda (Opsional)" class="w-full text-xs p-2.5 rounded-xl bg-white border border-gray-200 focus:outline-none focus:border-purple-500 font-medium">
+          <textarea id="ks-kritik" placeholder="Tulis kritik atau saran di sini..." rows="2" class="w-full text-xs p-2.5 rounded-xl bg-white border border-gray-200 focus:outline-none focus:border-purple-500 font-medium"></textarea>
+          <button onclick="submitKritikSaran()" id="btn-submit-ks" class="w-full bg-purple-600 text-white py-2 rounded-xl text-xs font-bold hover:bg-purple-700 transition shadow-sm">Kirim Masukan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Cart Bar -->
+    <div id="floating-cart" class="fixed bottom-0 w-full max-w-[480px] bg-white border-t border-gray-100 p-3 pb-5 flex justify-between items-center rounded-t-3xl shadow-[0_-10px_25px_rgba(0,0,0,0.05)] transform translate-y-full transition-transform duration-300 z-40">
+      <div>
+        <p class="text-[10px] text-gray-400 font-medium mb-0.5">Total Pesanan</p>
+        <p id="cart-total-price" class="text-lg font-black text-purple-600">Rp 0</p>
+      </div>
+      <button onclick="showCheckout()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2.5 rounded-full font-bold text-xs shadow-lg shadow-purple-300/50 transition flex items-center space-x-2">
+        <span>Checkout</span>
+        <span id="cart-count" class="bg-white text-purple-600 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div id="checkout-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center items-end opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="checkout-sheet" class="bg-white w-full max-w-[480px] rounded-t-[2rem] p-5 transform translate-y-full transition-transform duration-300 max-h-[85vh] flex flex-col">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-gray-900">Konfirmasi Pesanan</h2>
+        <button onclick="hideCheckout()" class="w-7 h-7 bg-gray-100 rounded-full text-gray-500 flex justify-center items-center hover:bg-gray-200 transition text-xs"><i class="fas fa-times"></i></button>
+      </div>
+      
+      <div id="checkout-items" class="mb-4 overflow-y-auto pr-2 flex-1 space-y-2.5 no-scrollbar">
+        <!-- Checkout items -->
+      </div>
+
+      <div class="bg-gray-50 p-3.5 rounded-2xl mb-3.5 border border-gray-100">
+        <label class="block text-xs font-bold text-gray-700 mb-1.5">Pilih Nomor Meja</label>
+        <div class="flex items-center bg-white rounded-xl border focus-within:border-purple-500 px-2">
+          <div class="pr-2 text-gray-400 text-xs"><i class="fas fa-chair"></i></div>
+          <input type="number" id="input-meja" class="w-full py-2 bg-transparent focus:outline-none font-bold text-gray-700 text-xs" placeholder="Contoh: 5">
+        </div>
+      </div>
+
+      <div class="border-t border-dashed border-gray-200 pt-2.5 flex justify-between items-end mb-4">
+        <span class="font-bold text-gray-400 text-xs">Total Bayar</span>
+        <span id="checkout-total" class="font-black text-xl text-purple-600 tracking-tight">Rp 0</span>
+      </div>
+
+      <button onclick="submitOrder()" id="btn-submit-order" class="w-full bg-purple-600 text-white py-3 rounded-full font-bold text-xs hover:bg-purple-700 shadow-xl shadow-purple-200 transition-all active:scale-[0.98]">
+        Kirim Pesanan
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ============================================== -->
+  <!-- ADMIN LOGIN                                    -->
+  <!-- ============================================== -->
+  <div id="admin-login" class="app-container flex flex-col justify-center items-center px-6 hide bg-gray-50">
+    <div class="bg-white p-7 rounded-3xl shadow-xl shadow-gray-200/50 w-full max-w-sm text-center">
+      <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex justify-center items-center mx-auto mb-5 text-2xl shadow-inner">
+        <i class="fas fa-user-lock"></i>
+      </div>
+      <h2 class="text-xl font-black text-gray-800 mb-1">Admin Portal</h2>
+      <p class="text-xs text-gray-500 mb-5">Masuk untuk mengelola pesanan & menu.</p>
+      
+      <div class="space-y-3 mb-5">
+        <input type="text" id="admin-user" placeholder="Username" class="w-full border-2 border-gray-100 p-3 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-500 text-xs font-medium">
+        <input type="password" id="admin-pass" placeholder="Password" class="w-full border-2 border-gray-100 p-3 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:border-purple-500 text-xs font-medium">
+      </div>
+      
+      <button onclick="processLogin()" id="btn-login" class="w-full bg-purple-600 text-white font-bold py-2.5 rounded-xl hover:bg-purple-700 transition shadow-lg shadow-purple-200 text-xs">Login Sekarang</button>
+      <button onclick="closeAdminLogin()" class="mt-4 text-gray-400 hover:text-gray-600 text-[11px] font-medium transition-colors">Kembali ke Beranda</button>
+    </div>
+  </div>
+
+
+  <!-- ============================================== -->
+  <!-- ADMIN DASHBOARD (DESKTOP FRIENDLY)             -->
+  <!-- ============================================== -->
+  <div id="admin-dashboard" class="admin-container hide pb-16">
+    <div class="bg-white shadow-sm sticky top-0 z-20">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 bg-purple-600 text-white rounded-xl flex justify-center items-center text-base shadow-md"><i class="fas fa-store"></i></div>
+          <h1 class="text-lg font-black text-gray-800">Dashboard Admin Siomay</h1>
+        </div>
+        <button onclick="logoutAdmin()" class="bg-red-50 text-red-600 hover:bg-red-100 px-3.5 py-2 rounded-xl font-bold text-xs transition flex items-center space-x-2">
+          <i class="fas fa-sign-out-alt"></i> <span>Keluar</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 mt-6">
+      <!-- Admin Navigation Tabs -->
+      <div class="flex flex-wrap gap-2 mb-6 bg-white p-2 rounded-2xl shadow-sm inline-flex">
+        <button onclick="switchAdminTab('tab-orders')" id="btn-tab-orders" class="px-4 py-2 bg-purple-600 text-white rounded-xl font-bold text-xs shadow-sm transition">Pesanan Aktif</button>
+        <button onclick="switchAdminTab('tab-menu')" id="btn-tab-menu" class="px-4 py-2 text-gray-500 hover:bg-gray-50 rounded-xl font-bold text-xs transition">Kelola Menu</button>
+        <button onclick="switchAdminTab('tab-socmed')" id="btn-tab-socmed" class="px-4 py-2 text-gray-500 hover:bg-gray-50 rounded-xl font-bold text-xs transition">Media Sosial</button>
+        <button onclick="switchAdminTab('tab-kritik')" id="btn-tab-kritik" class="px-4 py-2 text-gray-500 hover:bg-gray-50 rounded-xl font-bold text-xs transition">Kritik & Saran</button>
+        <button onclick="switchAdminTab('tab-report')" id="btn-tab-report" class="px-4 py-2 text-gray-500 hover:bg-gray-50 rounded-xl font-bold text-xs transition">Laporan & Filter</button>
+      </div>
+
+      <!-- TAB: ORDERS -->
+      <div id="tab-orders" class="admin-tab block bg-white rounded-3xl shadow-sm p-6">
+        <div class="flex justify-between items-center mb-5">
+          <h2 class="text-lg font-bold text-gray-800">Daftar Pesanan Meja</h2>
+          <button onclick="loadOrdersAdmin()" class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3.5 py-2 rounded-xl font-bold text-xs transition flex items-center space-x-2">
+            <i class="fas fa-sync-alt"></i> <span>Refresh</span>
+          </button>
+        </div>
+        
+        <div class="overflow-x-auto rounded-2xl border border-gray-100">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-50 text-gray-500 text-xs">
+                <th class="p-3.5 font-bold rounded-tl-2xl">Waktu</th>
+                <th class="p-3.5 font-bold">Meja</th>
+                <th class="p-3.5 font-bold">Pesanan</th>
+                <th class="p-3.5 font-bold">Total</th>
+                <th class="p-3.5 font-bold">Status</th>
+                <th class="p-3.5 font-bold rounded-tr-2xl text-center">Aksi / Upload Struk</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-table" class="divide-y divide-gray-100 text-xs">
+              <tr><td colspan="6" class="p-8 text-center text-gray-400 font-medium">Memuat pesanan...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: MENU MANAGEMENT -->
+      <div id="tab-menu" class="admin-tab hide bg-white rounded-3xl shadow-sm p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-5">Tambah Menu Baru (Upload Gambar)</h2>
+        
+        <div class="bg-purple-50 p-5 rounded-2xl border border-purple-100 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+          <div>
+            <label class="block text-xs font-bold text-purple-700 mb-1.5">Nama Menu</label>
+            <input type="text" id="new-menu-nama" class="w-full border-0 p-3 rounded-xl shadow-sm bg-white text-xs focus:ring-2 focus:ring-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-700 mb-1.5">Kategori</label>
+            <select id="new-menu-kat" class="w-full border-0 p-3 rounded-xl shadow-sm bg-white text-xs focus:ring-2 focus:ring-purple-500 font-medium">
+              <option value="Makanan">Makanan</option>
+              <option value="Minuman">Minuman</option>
+              <option value="Paket">Paket</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-700 mb-1.5">Harga (Rp)</label>
+            <input type="number" id="new-menu-harga" class="w-full border-0 p-3 rounded-xl shadow-sm bg-white text-xs focus:ring-2 focus:ring-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-700 mb-1.5">File Gambar (JPG/PNG/SVG/WebP)</label>
+            <input type="file" id="new-menu-file" accept="image/*" class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700">
+          </div>
+          <div class="md:col-span-4">
+            <button onclick="adminAddMenu()" class="w-full md:w-auto bg-purple-600 text-white px-7 py-2.5 rounded-xl font-bold text-xs shadow-md shadow-purple-200 hover:bg-purple-700 transition">
+              <i class="fas fa-plus mr-1"></i> Simpan Menu Baru
+            </button>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto rounded-2xl border border-gray-100">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-50 text-gray-500 text-xs">
+                <th class="p-3.5 font-bold rounded-tl-2xl">Gambar</th>
+                <th class="p-3.5 font-bold">Nama Menu</th>
+                <th class="p-3.5 font-bold">Kategori</th>
+                <th class="p-3.5 font-bold">Harga</th>
+                <th class="p-3.5 font-bold rounded-tr-2xl text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="admin-menu-table" class="divide-y divide-gray-100 text-xs"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: SOCIAL MEDIA SETTINGS -->
+      <div id="tab-socmed" class="admin-tab hide bg-white rounded-3xl shadow-sm p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-2">Pengaturan Link Media Sosial & WhatsApp</h2>
+        <p class="text-xs text-gray-500 mb-6">Atur tujuan link ketika pengunjung mengklik ikon WhatsApp, Instagram, atau TikTok di beranda.</p>
+        
+        <div class="bg-purple-50/50 p-6 rounded-2xl border border-purple-100 max-w-2xl space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-purple-900 mb-1"><i class="fab fa-whatsapp text-green-600 mr-1.5"></i> Link WhatsApp (Format: https://wa.me/628xxx)</label>
+            <input type="text" id="admin-link-wa" class="w-full p-3 rounded-xl bg-white border border-gray-200 text-xs focus:outline-none focus:border-purple-500 font-medium">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-900 mb-1"><i class="fab fa-instagram text-pink-600 mr-1.5"></i> Link Instagram (Format: https://instagram.com/username)</label>
+            <input type="text" id="admin-link-ig" class="w-full p-3 rounded-xl bg-white border border-gray-200 text-xs focus:outline-none focus:border-purple-500 font-medium">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-900 mb-1"><i class="fab fa-tiktok text-gray-900 mr-1.5"></i> Link TikTok (Format: https://tiktok.com/@username)</label>
+            <input type="text" id="admin-link-tk" class="w-full p-3 rounded-xl bg-white border border-gray-200 text-xs focus:outline-none focus:border-purple-500 font-medium">
+          </div>
+          <div>
+            <button onclick="saveSocialMediaLinks()" id="btn-save-socmed" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2.5 rounded-xl font-bold text-xs transition shadow-sm">
+              Simpan Link Media Sosial
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: KRITIK & SARAN -->
+      <div id="tab-kritik" class="admin-tab hide bg-white rounded-3xl shadow-sm p-6">
+        <div class="flex justify-between items-center mb-5">
+          <h2 class="text-lg font-bold text-gray-800">Daftar Kritik & Saran Pelanggan</h2>
+          <button onclick="loadKritikAdmin()" class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3.5 py-2 rounded-xl font-bold text-xs transition">
+            <i class="fas fa-sync-alt mr-1"></i> Refresh
+          </button>
+        </div>
+        <div class="overflow-x-auto rounded-2xl border border-gray-100">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-50 text-gray-500 text-xs">
+                <th class="p-3.5 font-bold rounded-tl-2xl">Tanggal</th>
+                <th class="p-3.5 font-bold">Nama Pengunjung</th>
+                <th class="p-3.5 font-bold">Kritik</th>
+                <th class="p-3.5 font-bold rounded-tr-2xl">Saran</th>
+              </tr>
+            </thead>
+            <tbody id="admin-kritik-table" class="divide-y divide-gray-100 text-xs">
+              <tr><td colspan="4" class="p-8 text-center text-gray-400">Memuat data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: REPORT & FILTER -->
+      <div id="tab-report" class="admin-tab hide bg-white rounded-3xl shadow-sm p-6">
+        <div class="flex flex-wrap justify-between items-center mb-5 gap-4">
+          <h2 class="text-lg font-bold text-gray-800">Laporan Keuangan & Filter Periode</h2>
+          <button onclick="generatePDF()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-xl shadow-md font-bold text-xs transition flex items-center space-x-2">
+            <i class="fas fa-file-pdf"></i> <span>Download Laporan PDF</span>
+          </button>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 mb-5 flex flex-wrap gap-4 items-end">
+          <div>
+            <label class="block text-xs font-bold text-gray-600 mb-1">Mulai Tanggal</label>
+            <input type="date" id="filter-start" class="p-2.5 rounded-xl bg-white border text-xs font-medium">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-600 mb-1">Sampai Tanggal</label>
+            <input type="date" id="filter-end" class="p-2.5 rounded-xl bg-white border text-xs font-medium">
+          </div>
+          <div>
+            <button onclick="applyReportFilter()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs transition">
+              Filter Data
+            </button>
+            <button onclick="resetReportFilter()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3.5 py-2.5 rounded-xl font-bold text-xs transition ml-2">
+              Reset
+            </button>
+          </div>
+        </div>
+        
+        <!-- Printable Report Area -->
+        <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200">
+          <div id="report-content" class="bg-white p-7 shadow-sm mx-auto" style="max-width: 800px;">
+            <div class="text-center border-b-2 border-gray-800 pb-4 mb-4">
+              <h3 class="text-xl font-black text-gray-900 mb-1 tracking-tight">SIOMAY LANGKAT</h3>
+              <p class="text-xs text-gray-500">Laporan Penjualan & Penghasilan (Transaksi Sukses)</p>
+              <p id="report-periode-label" class="text-xs font-bold text-purple-600 mt-1">Periode: Semua Waktu</p>
+            </div>
+            
+            <table class="w-full text-left border-collapse mb-5 text-xs">
+              <thead>
+                <tr class="bg-gray-100 text-gray-800">
+                  <th class="p-2.5 border-b-2 border-gray-300 font-bold">Tanggal</th>
+                  <th class="p-2.5 border-b-2 border-gray-300 font-bold">ID Order</th>
+                  <th class="p-2.5 border-b-2 border-gray-300 font-bold">Meja</th>
+                  <th class="p-2.5 border-b-2 border-gray-300 font-bold">Pesanan</th>
+                  <th class="p-2.5 border-b-2 border-gray-300 font-bold text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody id="report-table-body" class="divide-y divide-gray-100">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+            
+            <div class="flex justify-end">
+              <div class="bg-purple-50 p-3.5 rounded-xl border border-purple-100 min-w-[260px]">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="font-bold text-gray-600">TOTAL PENDAPATAN:</span>
+                  <span class="font-black text-purple-700 text-sm" id="report-grand-total">Rp 0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Alert Modal -->
+  <div id="custom-alert" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-5 py-2.5 rounded-full shadow-2xl z-[100] opacity-0 pointer-events-none flex items-center space-x-2.5 text-xs font-medium">
+    <i id="alert-icon" class="fas fa-info-circle text-purple-400"></i>
+    <span id="alert-msg">Pesan...</span>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- JAVASCRIPT LOGIC                               -->
+  <!-- ============================================== -->
+  <script>
+    let currentMenu = [];
+    let activeCategory = 'All';
+    let cart = {};
+    let allOrders = [];
+    let allKritik = [];
+    let socialLinks = { WhatsApp: '', Instagram: '', TikTok: '' };
+
+    window.onload = () => {
+      loadCustomerMenu();
+      loadSocialMediaLinks();
+    };
+
+    const formatRp = (num) => {
+      const parsed = parseInt(num) || 0;
+      return "Rp " + parsed.toLocaleString('id-ID');
+    };
+
+    function showToast(message, type = 'info') {
+      const alertEl = document.getElementById('custom-alert');
+      const icon = document.getElementById('alert-icon');
+      document.getElementById('alert-msg').innerText = message;
+      
+      icon.className = type === 'success' ? 'fas fa-check-circle text-green-400' : 
+                       type === 'error' ? 'fas fa-exclamation-circle text-red-400' : 
+                       'fas fa-info-circle text-purple-400';
+
+      alertEl.classList.remove('opacity-0', 'pointer-events-none');
+      setTimeout(() => alertEl.classList.add('opacity-0', 'pointer-events-none'), 3000);
+    }
+
+    function scrollToMenu() {
+      document.getElementById('menu-anchor').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // --- LOAD SOCIAL MEDIA LINKS ---
+    function loadSocialMediaLinks() {
+      google.script.run.withSuccessHandler((data) => {
+        data.forEach(item => {
+          const plat = String(item.Platform).trim();
+          const lnk = String(item.Link).trim();
+          if(plat.toLowerCase() === 'whatsapp') socialLinks.WhatsApp = lnk;
+          if(plat.toLowerCase() === 'instagram') socialLinks.Instagram = lnk;
+          if(plat.toLowerCase() === 'tiktok') socialLinks.TikTok = lnk;
+        });
+
+        // Update customer view links
+        if(socialLinks.WhatsApp) document.getElementById('socmed-wa').href = socialLinks.WhatsApp;
+        if(socialLinks.Instagram) document.getElementById('socmed-ig').href = socialLinks.Instagram;
+        if(socialLinks.TikTok) document.getElementById('socmed-tk').href = socialLinks.TikTok;
+
+        // Update admin inputs if populated
+        if(document.getElementById('admin-link-wa')) {
+          document.getElementById('admin-link-wa').value = socialLinks.WhatsApp;
+          document.getElementById('admin-link-ig').value = socialLinks.Instagram;
+          document.getElementById('admin-link-tk').value = socialLinks.TikTok;
+        }
+      }).getSocialMedia();
+    }
+
+    // --- CUSTOMER LOGIC ---
+    function loadCustomerMenu() {
+      document.getElementById('menu-loading').classList.remove('hide');
+      document.getElementById('menu-container').innerHTML = '';
+      
+      google.script.run.withSuccessHandler((data) => {
+        currentMenu = data;
+        renderCustomerMenu();
+        document.getElementById('menu-loading').classList.add('hide');
+      }).withFailureHandler((err) => {
+        showToast("Gagal memuat menu. Jalankan setupDatabase() di Apps Script.", "error");
+        document.getElementById('menu-loading').innerHTML = '<p class="text-red-500 text-xs"><i class="fas fa-exclamation-triangle"></i> Gagal koneksi database.</p>';
+      }).getMenu();
+    }
+
+    function filterCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(el => {
+        if(el.getAttribute('data-cat') === cat) {
+          el.className = "flex items-center space-x-2 bg-purple-600 text-white px-3 py-2 rounded-xl cursor-pointer shadow-sm flex-shrink-0 transition cat-pill active-cat";
+        } else {
+          el.className = "flex items-center space-x-2 bg-white border border-gray-100 text-gray-700 px-3 py-2 rounded-xl cursor-pointer shadow-sm flex-shrink-0 transition cat-pill";
+        }
+      });
+      renderCustomerMenu();
+    }
+
+    function renderCustomerMenu() {
+      const container = document.getElementById('menu-container');
+      container.innerHTML = '';
+      
+      const filtered = activeCategory === 'All' ? currentMenu : currentMenu.filter(m => m.Kategori === activeCategory);
+
+      if(filtered.length === 0) {
+        container.innerHTML = '<div class="col-span-2 text-center text-gray-400 py-10 text-xs">Menu belum tersedia.</div>';
+        return;
+      }
+
+      filtered.forEach(item => {
+        const qty = cart[item.ID_Menu] ? cart[item.ID_Menu].qty : 0;
+        const imgUrl = item.Gambar_URL || 'https://placehold.co/300x300/F3F4F6/8B5CF6?text=Siomay';
+        
+        const html = `
+          <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full relative overflow-hidden group">
+            <div class="relative rounded-xl overflow-hidden mb-2 aspect-square bg-gray-100">
+               <img src="${imgUrl}" alt="${item.Nama_Menu}" class="w-full h-full object-cover transition-transform group-hover:scale-105" onerror="this.src='https://placehold.co/300x300/F3F4F6/8B5CF6?text=Image+Error'">
+            </div>
+            <div class="flex-1">
+              <h3 class="font-bold text-gray-800 text-xs leading-tight mb-0.5">${item.Nama_Menu}</h3>
+              <p class="text-[9px] uppercase font-bold text-purple-400 tracking-wider mb-2">${item.Kategori}</p>
+            </div>
+            <div class="flex justify-between items-center mt-auto pt-2 border-t border-gray-50">
+              <span class="font-black text-gray-900 text-xs">${formatRp(item.Harga)}</span>
+              ${qty > 0 
+                ? `<div class="flex items-center space-x-1 bg-purple-50 rounded-lg p-1 border border-purple-100">
+                    <button onclick="updateCart('${item.ID_Menu}', -1)" class="w-5 h-5 bg-white text-purple-600 rounded shadow-sm font-bold flex items-center justify-center text-xs">-</button>
+                    <span class="text-xs font-bold w-3 text-center text-purple-700">${qty}</span>
+                    <button onclick="updateCart('${item.ID_Menu}', 1)" class="w-5 h-5 bg-purple-600 text-white rounded shadow-sm font-bold flex items-center justify-center text-xs">+</button>
+                   </div>`
+                : `<button onclick="updateCart('${item.ID_Menu}', 1)" class="w-7 h-7 bg-purple-100 text-purple-600 rounded-xl flex justify-center items-center hover:bg-purple-600 hover:text-white transition-colors text-xs">
+                    <i class="fas fa-plus"></i>
+                   </button>`
+              }
+            </div>
+          </div>
+        `;
+        container.innerHTML += html;
+      });
+      updateCartUI();
+    }
+
+    function updateCart(idMenu, change) {
+      if(!cart[idMenu]) {
+        const menuItem = currentMenu.find(m => m.ID_Menu == idMenu);
+        cart[idMenu] = { ...menuItem, qty: 0 };
+      }
+      cart[idMenu].qty += change;
+      if(cart[idMenu].qty <= 0) delete cart[idMenu];
+      
+      renderCustomerMenu();
+    }
+
+    function updateCartUI() {
+      let totalQty = 0;
+      let totalPrice = 0;
+      Object.values(cart).forEach(item => {
+        totalQty += item.qty;
+        totalPrice += (item.qty * parseInt(item.Harga));
+      });
+
+      const floatCart = document.getElementById('floating-cart');
+      if(totalQty > 0) {
+        floatCart.classList.remove('translate-y-full');
+        document.getElementById('cart-count').innerText = totalQty;
+        document.getElementById('cart-total-price').innerText = formatRp(totalPrice);
+        document.getElementById('checkout-total').innerText = formatRp(totalPrice);
+      } else {
+        floatCart.classList.add('translate-y-full');
+        hideCheckout();
+      }
+    }
+
+    function showCheckout() {
+      const container = document.getElementById('checkout-items');
+      container.innerHTML = '';
+      Object.values(cart).forEach(item => {
+        container.innerHTML += `
+          <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-xs">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-bold text-purple-600 shadow-sm border border-gray-100 text-xs">
+                ${item.qty}x
+              </div>
+              <div>
+                <p class="font-bold text-gray-800">${item.Nama_Menu}</p>
+                <p class="text-[10px] text-gray-500 font-medium">${formatRp(item.Harga)}</p>
+              </div>
+            </div>
+            <p class="font-black text-gray-800">${formatRp(item.Harga * item.qty)}</p>
+          </div>
+        `;
+      });
+      
+      const modal = document.getElementById('checkout-modal');
+      const sheet = document.getElementById('checkout-sheet');
+      
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      setTimeout(() => sheet.classList.remove('translate-y-full'), 50);
+    }
+
+    function hideCheckout() { 
+      const modal = document.getElementById('checkout-modal');
+      const sheet = document.getElementById('checkout-sheet');
+      sheet.classList.add('translate-y-full');
+      setTimeout(() => modal.classList.add('opacity-0', 'pointer-events-none'), 300);
+    }
+
+    function submitOrder() {
+      const meja = document.getElementById('input-meja').value;
+      if(!meja) return showToast("Silakan isi Nomor Meja terlebih dahulu!", "error");
+
+      let items = Object.values(cart).map(i => ({ nama: i.Nama_Menu, qty: i.qty }));
+      let total = Object.values(cart).reduce((sum, i) => sum + (parseInt(i.Harga) * i.qty), 0);
+
+      const btn = document.getElementById('btn-submit-order');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
+      btn.disabled = true;
+
+      google.script.run.withSuccessHandler(res => {
+        showToast(res, "success");
+        cart = {};
+        hideCheckout();
+        renderCustomerMenu();
+        btn.innerHTML = 'Kirim Pesanan';
+        btn.disabled = false;
+        document.getElementById('input-meja').value = '';
+      }).withFailureHandler(err => {
+        showToast("Terjadi kesalahan.", "error");
+        btn.innerHTML = 'Kirim Pesanan';
+        btn.disabled = false;
+      }).addOrder({ items: items, meja: meja, total: total });
+    }
+
+    function submitKritikSaran() {
+      const nama = document.getElementById('ks-nama').value;
+      const kritik = document.getElementById('ks-kritik').value;
+      if(!kritik) return showToast("Tulis kritik atau saran terlebih dahulu!", "error");
+
+      const btn = document.getElementById('btn-submit-ks');
+      btn.innerHTML = 'Mengirim...';
+      btn.disabled = true;
+
+      google.script.run.withSuccessHandler(res => {
+        showToast(res, "success");
+        document.getElementById('ks-nama').value = '';
+        document.getElementById('ks-kritik').value = '';
+        btn.innerHTML = 'Kirim Masukan';
+        btn.disabled = false;
+      }).withFailureHandler(() => {
+        showToast("Gagal mengirim.", "error");
+        btn.innerHTML = 'Kirim Masukan';
+        btn.disabled = false;
+      }).addKritikSaran({ nama: nama, kritik: kritik, saran: '-' });
+    }
+
+
+    // --- ADMIN LOGIC ---
+    function showAdminLogin() {
+      document.getElementById('customer-view').classList.add('hide');
+      document.getElementById('admin-login').classList.remove('hide');
+    }
+    function closeAdminLogin() {
+      document.getElementById('admin-login').classList.add('hide');
+      document.getElementById('customer-view').classList.remove('hide');
+    }
+
+    function processLogin() {
+      const u = document.getElementById('admin-user').value;
+      const p = document.getElementById('admin-pass').value;
+      if(!u || !p) return showToast("Isi username & password!", "error");
+
+      const btn = document.getElementById('btn-login');
+      btn.innerHTML = 'Loading...';
+
+      google.script.run.withSuccessHandler(res => {
+        btn.innerHTML = "Login Sekarang";
+        if(res.success) {
+          document.getElementById('admin-login').classList.add('hide');
+          document.getElementById('admin-dashboard').classList.remove('hide');
+          showToast("Berhasil masuk Admin!", "success");
+          loadOrdersAdmin();
+          loadMenuAdmin();
+          loadKritikAdmin();
+          loadSocialMediaLinks();
+        } else {
+          showToast(res.message, "error");
+        }
+      }).loginAdmin(u, p);
+    }
+
+    function logoutAdmin() {
+      document.getElementById('admin-dashboard').classList.add('hide');
+      document.getElementById('customer-view').classList.remove('hide');
+      document.getElementById('admin-user').value = '';
+      document.getElementById('admin-pass').value = '';
+      showToast("Anda telah keluar.", "info");
+    }
+
+    function switchAdminTab(tabId) {
+      document.querySelectorAll('.admin-tab').forEach(el => el.classList.add('hide'));
+      document.getElementById(tabId).classList.remove('hide');
+      
+      const btns = ['btn-tab-orders', 'btn-tab-menu', 'btn-tab-socmed', 'btn-tab-kritik', 'btn-tab-report'];
+      btns.forEach(id => {
+        const b = document.getElementById(id);
+        if(b) b.className = "px-4 py-2 text-gray-500 hover:bg-gray-50 rounded-xl font-bold text-xs transition";
+      });
+      const activeBtn = document.getElementById('btn-' + tabId);
+      if(activeBtn) activeBtn.className = "px-4 py-2 bg-purple-600 text-white rounded-xl font-bold text-xs shadow-sm transition";
+    }
+
+    // --- ADMIN: ORDERS ---
+    function loadOrdersAdmin() {
+      document.getElementById('admin-orders-table').innerHTML = '<tr><td colspan="6" class="p-8 text-center"><i class="fas fa-spinner fa-spin text-purple-500"></i></td></tr>';
+      
+      google.script.run.withSuccessHandler(data => {
+        allOrders = data;
+        renderOrdersTable(data);
+        renderReportTable(data);
+      }).getOrders();
+    }
+
+    function renderOrdersTable(data) {
+      let html = '';
+      if(data.length === 0) {
+        document.getElementById('admin-orders-table').innerHTML = '<tr><td colspan="6" class="p-8 text-center text-gray-400">Belum ada pesanan.</td></tr>';
+        return;
+      }
+
+      [...data].reverse().forEach(o => {
+        let statusStyle = o.Status === 'Sudah Bayar' ? "bg-green-100 text-green-700 border border-green-200" :
+                          o.Status === 'Batal' ? "bg-red-100 text-red-700 border border-red-200" : "bg-yellow-100 text-yellow-700 border border-yellow-200";
+        
+        const tglSplit = o.Tanggal.split(' ');
+        
+        html += `
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="p-3">
+              <div class="font-bold text-gray-800">${tglSplit[1] || ''}</div>
+              <div class="text-[10px] text-gray-400">${tglSplit[0] || ''}</div>
+            </td>
+            <td class="p-3">
+              <span class="w-7 h-7 bg-purple-50 text-purple-600 rounded-lg inline-flex items-center justify-center font-black">${o.Meja}</span>
+            </td>
+            <td class="p-3 text-gray-700 max-w-xs leading-relaxed">${o.Pesanan}</td>
+            <td class="p-3 font-black text-gray-900">${formatRp(o.Total)}</td>
+            <td class="p-3"><span class="px-2.5 py-1 rounded-lg font-bold ${statusStyle} inline-block">${o.Status}</span></td>
+            <td class="p-3 text-center">
+              <div class="flex flex-col space-y-1.5">
+                ${o.Status === 'Belum Bayar' ? `
+                  <button onclick="updateStatus('${o.ID_Order}', 'Sudah Bayar')" class="bg-green-500 hover:bg-green-600 text-white py-1 px-2.5 rounded-lg font-bold transition">Terima</button>
+                  <button onclick="updateStatus('${o.ID_Order}', 'Batal')" class="bg-red-50 text-red-500 hover:bg-red-100 py-1 px-2.5 rounded-lg font-bold transition">Batal</button>
+                ` : (o.Status === 'Sudah Bayar' ? `
+                  <div class="flex items-center space-x-1.5 justify-center">
+                    <label class="cursor-pointer bg-blue-50 text-blue-600 hover:bg-blue-100 px-2.5 py-1 rounded-lg font-bold border border-blue-200 transition">
+                      <i class="fas fa-upload mr-1"></i> Struk
+                      <input type="file" accept="image/*" class="hidden" onchange="uploadStrukFile(event, '${o.ID_Order}')">
+                    </label>
+                    ${o.Bukti_Bayar ? '<span class="text-green-600 font-bold" title="Struk Ada"><i class="fas fa-check-circle"></i></span>' : ''}
+                  </div>
+                ` : '<span class="text-gray-400">-</span>')}
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('admin-orders-table').innerHTML = html;
+    }
+
+    function updateStatus(idOrder, status, bukti = "") {
+      showToast("Memperbarui status...", "info");
+      google.script.run.withSuccessHandler(res => {
+        showToast(res, "success");
+        loadOrdersAdmin();
+      }).updateOrderStatus(idOrder, status, bukti);
+    }
+
+    function uploadStrukFile(event, idOrder) {
+      const file = event.target.files[0];
+      if(!file) return;
+      if(file.size > 1024 * 1024 * 2) return showToast("Ukuran file maksimal 2MB!", "error");
+
+      showToast("Mengunggah foto struk...", "info");
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64 = e.target.result;
+        updateStatus(idOrder, 'Sudah Bayar', base64);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // --- ADMIN: SOCIAL MEDIA SETTINGS ---
+    function saveSocialMediaLinks() {
+      const wa = document.getElementById('admin-link-wa').value;
+      const ig = document.getElementById('admin-link-ig').value;
+      const tk = document.getElementById('admin-link-tk').value;
+
+      const btn = document.getElementById('btn-save-socmed');
+      btn.innerText = "Menyimpan...";
+      btn.disabled = true;
+
+      // Save sequentially or update
+      google.script.run.withSuccessHandler(() => {
+        google.script.run.withSuccessHandler(() => {
+          google.script.run.withSuccessHandler((res) => {
+            showToast(res, "success");
+            btn.innerText = "Simpan Link Media Sosial";
+            btn.disabled = false;
+            loadSocialMediaLinks();
+          }).updateSocialMedia('TikTok', tk);
+        }).updateSocialMedia('Instagram', ig);
+      }).updateSocialMedia('WhatsApp', wa);
+    }
+
+    // --- ADMIN: MENU ---
+    function loadMenuAdmin() {
+      google.script.run.withSuccessHandler(data => {
+        let html = '';
+        data.forEach(m => {
+          const img = m.Gambar_URL || 'https://placehold.co/100x100/F3F4F6/8B5CF6?text=Img';
+          html += `
+            <tr class="border-b border-gray-100 hover:bg-gray-50">
+              <td class="p-3"><img src="${img}" class="w-9 h-9 rounded-lg object-cover bg-gray-200"></td>
+              <td class="p-3 font-bold text-gray-800">${m.Nama_Menu}</td>
+              <td class="p-3 text-gray-500">${m.Kategori}</td>
+              <td class="p-3 font-black text-purple-600">${formatRp(m.Harga)}</td>
+              <td class="p-3 text-center">
+                <button onclick="adminDelMenu('${m.ID_Menu}')" class="w-7 h-7 bg-red-50 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+          `;
+        });
+        document.getElementById('admin-menu-table').innerHTML = html || '<tr><td colspan="5" class="p-6 text-center text-gray-400">Menu kosong.</td></tr>';
+      }).getMenu();
+    }
+
+    function adminAddMenu() {
+      const nama = document.getElementById('new-menu-nama').value;
+      const kategori = document.getElementById('new-menu-kat').value;
+      const harga = document.getElementById('new-menu-harga').value;
+      const fileInput = document.getElementById('new-menu-file');
+
+      if(!nama || !harga) return showToast("Nama dan Harga wajib diisi!", "error");
+
+      const processSave = (imgUrl) => {
+        google.script.run.withSuccessHandler(res => {
+          showToast(res, "success");
+          loadMenuAdmin();
+          loadCustomerMenu();
+          document.getElementById('new-menu-nama').value = '';
+          document.getElementById('new-menu-harga').value = '';
+          fileInput.value = '';
+        }).addMenu({ nama, kategori, harga, gambar: imgUrl });
+      };
+
+      if(fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        if(file.size > 1024 * 1024 * 2) return showToast("Ukuran gambar maksimal 2MB!", "error");
+        
+        showToast("Memproses gambar...", "info");
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          processSave(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        processSave('');
+      }
+    }
+
+    function adminDelMenu(id) {
+      if(confirm("Yakin ingin menghapus menu ini?")) {
+        google.script.run.withSuccessHandler(res => {
+          showToast(res, "success");
+          loadMenuAdmin();
+          loadCustomerMenu();
+        }).deleteMenu(id);
+      }
+    }
+
+    // --- ADMIN: KRITIK & SARAN ---
+    function loadKritikAdmin() {
+      google.script.run.withSuccessHandler(data => {
+        allKritik = data;
+        let html = '';
+        if(data.length === 0) {
+          document.getElementById('admin-kritik-table').innerHTML = '<tr><td colspan="4" class="p-6 text-center text-gray-400">Belum ada kritik & saran.</td></tr>';
+          return;
+        }
+        [...data].reverse().forEach(k => {
+          html += `
+            <tr class="border-b border-gray-100 hover:bg-gray-50">
+              <td class="p-3 text-gray-500">${k.Tanggal}</td>
+              <td class="p-3 font-bold text-gray-800">${k.Nama}</td>
+              <td class="p-3 text-gray-700">${k.Kritik}</td>
+              <td class="p-3 text-gray-700">${k.Saran}</td>
+            </tr>
+          `;
+        });
+        document.getElementById('admin-kritik-table').innerHTML = html;
+      }).getKritikSaran();
+    }
+
+    // --- REPORT & FILTER ---
+    function renderReportTable(data) {
+      let reportHtml = '';
+      let grandTotal = 0;
+
+      const filtered = data.filter(o => o.Status === 'Sudah Bayar');
+
+      if(filtered.length === 0) {
+        document.getElementById('report-table-body').innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-400">Tidak ada transaksi sukses.</td></tr>';
+        document.getElementById('report-grand-total').innerText = formatRp(0);
+        return;
+      }
+
+      filtered.forEach(o => {
+        reportHtml += `
+          <tr>
+            <td class="p-2.5 border-b border-gray-200 text-gray-700">${o.Tanggal}</td>
+            <td class="p-2.5 border-b border-gray-200 text-gray-500 font-mono text-[11px]">${o.ID_Order}</td>
+            <td class="p-2.5 border-b border-gray-200 font-bold text-purple-600">Meja ${o.Meja}</td>
+            <td class="p-2.5 border-b border-gray-200 text-gray-700">${o.Pesanan}</td>
+            <td class="p-2.5 border-b border-gray-200 font-bold text-gray-900 text-right">${formatRp(o.Total)}</td>
+          </tr>
+        `;
+        grandTotal += parseInt(o.Total);
+      });
+
+      document.getElementById('report-table-body').innerHTML = reportHtml;
+      document.getElementById('report-grand-total').innerText = formatRp(grandTotal);
+    }
+
+    function applyReportFilter() {
+      const start = document.getElementById('filter-start').value;
+      const end = document.getElementById('filter-end').value;
+
+      if(!start || !end) return showToast("Pilih rentang tanggal lengkap!", "error");
+
+      const startDate = new Date(start);
+      startDate.setHours(0,0,0,0);
+      const endDate = new Date(end);
+      endDate.setHours(23,59,59,999);
+
+      const filtered = allOrders.filter(o => {
+        const parts = o.Tanggal.split(',')[0].split('/');
+        if(parts.length === 3) {
+          const orderDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+          return orderDate >= startDate && orderDate <= endDate;
+        }
+        return true;
+      });
+
+      document.getElementById('report-periode-label').innerText = `Periode: ${start} s/d ${end}`;
+      renderReportTable(filtered);
+      showToast("Filter diterapkan!", "success");
+    }
+
+    function resetReportFilter() {
+      document.getElementById('filter-start').value = '';
+      document.getElementById('filter-end').value = '';
+      document.getElementById('report-periode-label').innerText = "Periode: Semua Waktu";
+      renderReportTable(allOrders);
+      showToast("Filter direset", "info");
+    }
+
+    function generatePDF() {
+      showToast("Menyiapkan PDF Laporan...", "info");
+      const element = document.getElementById('report-content');
+      
+      element.style.border = '1px solid #E5E7EB';
+      const opt = {
+        margin:       0.4,
+        filename:     'Laporan_Keuangan_Siomay_Langkat.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(opt).from(element).save().then(() => {
+        element.style.border = 'none';
+        showToast("PDF Berhasil diunduh!", "success");
+      });
+    }
+  </script>
+</body>
+</html>
